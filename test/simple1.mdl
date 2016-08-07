@@ -1,0 +1,19 @@
+Post{
+	title: String;
+	author: Author;
+	body: String;
+	publishDate: Date;
+	tags: Tag;
+
+}
+
+Tag{
+	name: String;
+}
+
+
+Author{
+	name: String;
+	dateOfBirth: Date;
+}
+
