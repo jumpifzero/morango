@@ -6,6 +6,7 @@
 # ------------------------------------------------------------
 
 import ply.lex as lex
+import ply.yacc as yacc
 
 reserved = {
    'String' : 'STRING',
@@ -88,13 +89,53 @@ Author{
 	dateOfBirth: Date;
 }
 '''
+data = '''
+Post{
+  3
+}
+'''
+
 
 # Give the lexer some input
 lexer.input(data)
 
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break      # No more input
-    print(tok)
+if False: 
+  # Tokenize
+  while True:
+      tok = lexer.token()
+      if not tok: 
+          break      # No more input
+      print(tok)
+
+
+
+# Parser
+# ================
+# BNF Grammar
+# ================
+# model   : MODELNAME { fields }
+# fields  : fields field ;
+#         | field ;
+
+def p_fields(p):
+  'fields : 3'
+  # wip
+  # 
+  print(p[1])
+  p[0] = p[1]
+
+def p_model(p):
+  'model : MODELNAME LBRACKET fields RBRACKET'
+  print(p)
+  p[0] = p[2]
+
+
+# Error rule for syntax errors
+def p_error(p):
+  print("Syntax error in input!")
+
+# Build the parser
+parser = yacc.yacc()
+
+result = parser.parse(data)
+print(result)
