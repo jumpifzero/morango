@@ -91,7 +91,7 @@ Author{
 '''
 data = '''
 Post{
-  3
+  ,
 }
 '''
 
@@ -99,7 +99,7 @@ Post{
 # Give the lexer some input
 lexer.input(data)
 
-if False: 
+if True: 
   # Tokenize
   while True:
       tok = lexer.token()
@@ -117,22 +117,31 @@ if False:
 # fields  : fields field ;
 #         | field ;
 
-def p_fields(p):
-  'fields : 3'
+def p_modeldecl(p):
+  'model : ID LBRACKET fields RBRACKET'
+  print(p)
+  p[0] = {  'model':  p[1],
+            'fields': p[3]
+          }
+
+
+def p_modeldecl_print_error(p):
+     'model : ID LBRACKET error RBRACKET'
+     print("Syntax error in model declaration. Bad body")
+
+
+def p_fields_decl(p):
+  'fields : COMMA'
   # wip
   # 
   print(p[1])
   p[0] = p[1]
 
-def p_model(p):
-  'model : MODELNAME LBRACKET fields RBRACKET'
-  print(p)
-  p[0] = p[2]
-
 
 # Error rule for syntax errors
 def p_error(p):
-  print("Syntax error in input!")
+  print("Syntax error in input")
+
 
 # Build the parser
 parser = yacc.yacc()
