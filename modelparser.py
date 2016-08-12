@@ -1,16 +1,24 @@
-# ------------------------------------------------------------
+# ============================================================
 # modelparser.py
 #
 # (C) Tiago Almeida 2016
 # Still in early development stages.
-# ------------------------------------------------------------
+# ============================================================
 
+
+import sys
+import pprint
 import ply.lex as lex
 import ply.yacc as yacc
 
+
+
+# ============================================================
+# Lexer rules
+# ============================================================
 reserved = {
    'String' : 'STRING',
-   'Date' : 'DATE',
+   'Date'   : 'DATE',
 }
 
 # List of token names.   This is always required
@@ -48,7 +56,7 @@ def t_NUMBER(t):
 # Identifier match 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'ID')    # Check for reserved words
+    t.type = reserved.get(t.value,'ID') # Check for reserved words
     return t
 
 # Define a rule so we can track line numbers
@@ -64,65 +72,76 @@ def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
-# Build the lexer
-lexer = lex.lex()
 
-
-# Test it out
-data = '''
-Post{
-	title: String;
-	author: Author;
-	body: String;
-	publishDate: Date;
-	tags: Tag;
-
-}
-
-Tag{
-	name: String;
-}
-
-
-Author{
-	name: String;
-	dateOfBirth: Date;
-}
-'''
-data = '''
-Post{
-  ,
-}
-'''
-
-
-# Give the lexer some input
-lexer.input(data)
-
-if True: 
-  # Tokenize
-  while True:
-      tok = lexer.token()
-      if not tok: 
-          break      # No more input
-      print(tok)
-
-
-
-# Parser
-# ================
+# ============================================================
+# Parser rules
+# ============================================================
+# ----------------
 # BNF Grammar
-# ================
+# ----------------
 # model   : MODELNAME { fields }
 # fields  : fields field ;
 #         | field ;
+models = []
+fields = []
+def p_file(p):
+  """
+  rules : models
+  """
+  print('p_file')
+  p[0] = p[1]
+
+
+def p_modelsdecl(p):
+  """
+  models : models model
+         | model
+  """
+  if len(p) >= 3: 
+    models.append(p[2])
+  else:
+    models.append(p[1])
+
 
 def p_modeldecl(p):
   'model : ID LBRACKET fields RBRACKET'
-  print(p)
+  global fields
   p[0] = {  'model':  p[1],
-            'fields': p[3]
+            'fields': fields
           }
+  fields = []
+
+
+def p_fields_decl(p):
+  """
+  fields : fields field
+         | field
+  """
+  if len(p) >= 3: 
+    fields.append(p[2])
+  else:
+    fields.append(p[1])
+
+
+def p_field_decl(p):
+  """
+  field : ID COLON datatype SEMICOLON
+  """
+  # return an object with the field data
+  # 
+  p[0] = {
+          'name': p[1],
+          'type': p[3]
+          }
+
+
+def p_datatype(p):
+  """
+  datatype : STRING
+           | DATE
+           | ID
+  """
+  p[0] = p[1]
 
 
 def p_modeldecl_print_error(p):
@@ -130,21 +149,37 @@ def p_modeldecl_print_error(p):
      print("Syntax error in model declaration. Bad body")
 
 
-def p_fields_decl(p):
-  'fields : COMMA'
-  # wip
-  # 
-  print(p[1])
-  p[0] = p[1]
-
-
 # Error rule for syntax errors
 def p_error(p):
-  print("Syntax error in input")
+  pass
 
 
-# Build the parser
-parser = yacc.yacc()
+def main():
+  """
+  """
+  # Build the lexer
+  lexer = lex.lex()
+  # Read argv(1) file
+  with open(sys.argv[1]) as f:
+    data = f.read()
 
-result = parser.parse(data)
-print(result)
+  debug_lexer = False
+  if debug_lexer: 
+    lexer.input(data)
+    while True:
+        tok = lexer.token()
+        if not tok: 
+            break      # No more input
+        print(tok)
+
+  # Build the parser
+  parser = yacc.yacc()
+
+  result = parser.parse(data)
+  pprint.pprint(models)
+
+
+
+
+if __name__ == '__main__':
+  main()

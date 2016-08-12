@@ -1,19 +1,18 @@
 Post{
 	title: String;
-	author: Author;
+	author: String;
 	body: String;
 	publishDate: Date;
 	tags: Tag;
-
 }
 
 Tag{
-	name: String;
+	attr1: String;
 }
 
 
 Author{
-	name: String;
+	attr2: String;
 	dateOfBirth: Date;
 }
 
