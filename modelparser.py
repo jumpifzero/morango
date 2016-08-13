@@ -99,7 +99,6 @@ def p_file(p):
   """
   rules : models
   """
-  print('p_file')
   p[0] = p[1]
 
 
@@ -161,7 +160,6 @@ def p_field_multiplicity(p):
   multiplicity : STAR
                | empty
   """
-  pprint.pprint(p)
   if p[1] == '*':
     p[0] = MULT_ANY
   else:
@@ -186,6 +184,8 @@ def p_error(p):
 def parse(file_path, debug_lexer=False):
   """
   """
+  global models
+  models = []
   # Build the lexer
   lexer = lex.lex()
   # Read argv(1) file

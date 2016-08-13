@@ -1,0 +1,65 @@
+#!/usr/bin/python3
+
+# ============================================================
+# zipf main program
+#
+# (C) Tiago Almeida 2016
+#
+# Still in early development stages.
+#
+# ============================================================
+import argparse
+import functools as ftools
+import pprint
+import sys
+import modelparser as parser
+
+
+def setup_cmdline_args():
+	parser = argparse.ArgumentParser(
+					description='Generate a web or mobile app')
+	parser.add_argument('model_files', type=str, 
+						nargs='+',
+	                   	help='list of model files')
+	parser.add_argument('--generator', dest='generator',
+	                   	help='generator to be used')
+	parser.add_argument('--list-generators', dest='accumulate', 
+						action='store_const',
+						const=1, default=0,
+	                   	help='lists installed generators and exits')
+	args = parser.parse_args()
+	return args
+
+
+def validate_models_unique(models):
+	"""
+	Given a list of models, validates there are no repetitions.
+	"""
+	index = {}
+	for m in models:
+		index[m['model']] = True
+
+
+def validate_fields_unique(models):
+	"""
+	Given a list of models, for each one validates there are no
+	repeated fields.
+	"""
+	pass
+
+
+def main():
+	args = setup_cmdline_args()
+	model_files = args.model_files
+	models_fragments = list(map(parser.parse, model_files))
+	pprint.pprint(models_fragments)
+	# join the sublists of models into one big one
+	models = list(ftools.reduce(lambda l1,l2: l1 + l2, 
+								models_fragments))
+	# validate no errors on model definitions. raises exceptions
+	validate_models_unique(models)
+	validate_fields_unique(models)
+
+  	
+if __name__ == '__main__':
+  main()
