@@ -1,27 +1,10 @@
-# RADeK model file
-# This is a comment
-
-# Data types: 
-# --------------------
-# String([min,max])
-# Integer([min,max])
-# Date
-
-
 Post{
 	title: String;
-	author: Author;
+	author: String;
 	body: String;
 	publishDate: Date;
-	tags: (*)Tag;
-	status: set('draft','published','deleted')
-
-	actions{
-		publish;	
-		delete;
-	}
+	tags: *Tag;
 }
-
 
 Tag{
 	name: String;
@@ -29,7 +12,7 @@ Tag{
 
 
 Author{
-	name: String;
+	attr2: String;
 	dateOfBirth: Date;
 }
 
