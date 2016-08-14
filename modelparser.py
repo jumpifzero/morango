@@ -2,7 +2,12 @@
 # modelparser.py
 #
 # (C) Tiago Almeida 2016
+#
 # Still in early development stages.
+#
+# This module uses PLY (http://www.dabeaz.com/ply/ply.html)
+# and a set of grammar rules to parse a custom model 
+# definition language.
 # ============================================================
 
 
@@ -11,6 +16,12 @@ import pprint
 import ply.lex as lex
 import ply.yacc as yacc
 
+
+# ============================================================
+# Constants
+# ============================================================
+MULT_SINGLE = 1
+MULT_ANY    = 2
 
 
 # ============================================================
@@ -88,7 +99,6 @@ def p_file(p):
   """
   rules : models
   """
-  print('p_file')
   p[0] = p[1]
 
 
@@ -125,13 +135,14 @@ def p_fields_decl(p):
 
 def p_field_decl(p):
   """
-  field : ID COLON datatype SEMICOLON
+  field : ID COLON multiplicity datatype SEMICOLON
   """
   # return an object with the field data
   # 
   p[0] = {
           'name': p[1],
-          'type': p[3]
+          'type': p[4],
+          'mult': p[3]
           }
 
 
@@ -144,6 +155,22 @@ def p_datatype(p):
   p[0] = p[1]
 
 
+def p_field_multiplicity(p):
+  """
+  multiplicity : STAR
+               | empty
+  """
+  if p[1] == '*':
+    p[0] = MULT_ANY
+  else:
+    p[0] = MULT_SINGLE
+
+
+def p_empty(p):
+    'empty :'
+    pass
+
+
 def p_modeldecl_print_error(p):
      'model : ID LBRACKET error RBRACKET'
      print("Syntax error in model declaration. Bad body")
@@ -154,16 +181,17 @@ def p_error(p):
   pass
 
 
-def main():
+def parse(file_path, debug_lexer=False):
   """
   """
+  global models
+  models = []
   # Build the lexer
   lexer = lex.lex()
   # Read argv(1) file
-  with open(sys.argv[1]) as f:
+  with open(file_path) as f:
     data = f.read()
 
-  debug_lexer = False
   if debug_lexer: 
     lexer.input(data)
     while True:
@@ -172,13 +200,13 @@ def main():
             break      # No more input
         print(tok)
 
-  # Build the parser
   parser = yacc.yacc()
-
   result = parser.parse(data)
-  pprint.pprint(models)
+  return models 
 
 
+def main():
+  parse(sys.argv[1])
 
 
 if __name__ == '__main__':
