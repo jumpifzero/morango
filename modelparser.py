@@ -44,18 +44,21 @@ tokens = (
    'LBRACKET',
    'RBRACKET',
    'SEMICOLON',
+   'EXCLAMATION',
    'ID'
 ) + tuple(reserved.values())
 
 # Regular expression rules for simple tokens
-t_COMMA  	  = r'\,'
-t_STAR   	  = r'\*'
-t_LPAREN  	= r'\('
-t_RPAREN    = r'\)'
-t_COLON		  = r'\:'
-t_LBRACKET	= r'\{'
-t_RBRACKET	= r'\}'
-t_SEMICOLON = r'\;'
+t_COMMA  	    = r'\,'
+t_STAR   	    = r'\*'
+t_LPAREN  	  = r'\('
+t_RPAREN      = r'\)'
+t_COLON       = r'\:'
+t_LBRACKET    = r'\{'
+t_RBRACKET    = r'\}'
+t_SEMICOLON   = r'\;'
+t_EXCLAMATION = r'\!'
+
 
 
 # A regular expression rule with some action code
@@ -135,14 +138,15 @@ def p_fields_decl(p):
 
 def p_field_decl(p):
   """
-  field : ID COLON multiplicity datatype SEMICOLON
+  field : ID COLON multiplicity datatype notnull SEMICOLON
   """
   # return an object with the field data
   # 
   p[0] = {
           'name': p[1],
           'type': p[4],
-          'mult': p[3]
+          'mult': p[3],
+          'null': p[5]
           }
 
 
@@ -164,6 +168,17 @@ def p_field_multiplicity(p):
     p[0] = MULT_ANY
   else:
     p[0] = MULT_SINGLE
+
+
+def p_field_notnull(p):
+  """
+  notnull : EXCLAMATION
+          | empty
+  """
+  if p[1] == '!':
+    p[0] = False
+  else:
+    p[0] = True
 
 
 def p_empty(p):

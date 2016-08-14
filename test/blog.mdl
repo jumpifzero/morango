@@ -3,7 +3,7 @@ Post{
 	author: String;
 	body: String;
 	publishDate: Date;
-	tags: *Tag;
+	tags: *Tag!;
 }
 
 Tag{
