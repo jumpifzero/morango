@@ -10,11 +10,12 @@
 # definition language.
 # ============================================================
 
-
-import sys
+import functools as ftools
 import pprint
 import ply.lex as lex
 import ply.yacc as yacc
+import sys
+import exceptions
 
 
 # ============================================================
@@ -196,6 +197,27 @@ def p_error(p):
   pass
 
 
+def validate_models_unique(models):
+  """
+  Given a list of models, validates there are no repetitions.
+  """
+  index = {}
+  for m in models:
+    print(m['model'])
+    if m['model'] in index:
+      raise exceptions.ModelNotUnique(m['model'])
+    else:
+      index[m['model']] = True
+
+
+def validate_fields_unique(models):
+  """
+  Given a list of models, for each one validates there are no
+  repeated fields.
+  """
+  pass
+
+
 def parse(file_path, debug_lexer=False):
   """
   """
@@ -218,6 +240,15 @@ def parse(file_path, debug_lexer=False):
   parser = yacc.yacc()
   result = parser.parse(data)
   return models 
+
+
+def parse_files(files_lst):
+  # parse the files and join the sublists of models into one 
+  models_fragments = list(map(parse, files_lst))
+  models = list(ftools.reduce(lambda l1,l2: l1 + l2, 
+                models_fragments))
+  validate_models_unique(models)
+  return models
 
 
 def main():

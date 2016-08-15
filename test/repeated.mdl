@@ -1,0 +1,11 @@
+Model1{
+	title: String;
+	author: String;
+	body: String;
+	publishDate: Date;
+	tags: *Tag!;
+}
+
+Model1{
+	name: String;
+}

@@ -24,5 +24,10 @@ class TestBlog(unittest.TestCase):
       self.assertEqual(len(post_mdl['fields']), 5)
       # TODO: assert more stuff
 
+  def test_repeated_definitions(self):
+      print('repeated')
+      definition = modelparser.parse_files(['test/repeated.mdl'])
+      print(definition)
+
 if __name__ == '__main__':
     unittest.main()
