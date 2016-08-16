@@ -13,6 +13,7 @@ import pprint
 import sys
 import modelparser as parser
 import exceptions
+import DjangoGenerator
 
 
 def setup_cmdline_args():
@@ -31,14 +32,15 @@ def setup_cmdline_args():
 	return args
 
 
+def generate_app(models):
+	generator = DjangoGenerator.DjangoGenerator(models)
+	generator.go()
+
+
 def main():
 	args = setup_cmdline_args()
 	model_files = args.model_files
 	models = parser.parse_files(model_files)
-	
-	# validate no errors on model definitions. raises exceptions
-	validate_models_unique(models)
-	validate_fields_unique(models)
 	generate_app(models)
   	
 if __name__ == '__main__':
