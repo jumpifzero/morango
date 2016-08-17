@@ -19,8 +19,10 @@ import DjangoGenerator
 def setup_cmdline_args():
 	parser = argparse.ArgumentParser(
 					description='Generate a web or mobile app')
+	parser.add_argument('generator', type=str, 
+	                   	help='Generator package to use')
 	parser.add_argument('model_files', type=str, 
-						nargs='+',
+											nargs='+',
 	                   	help='list of model files')
 	parser.add_argument('--generator', dest='generator',
 	                   	help='generator to be used')
