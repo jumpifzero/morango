@@ -20,7 +20,8 @@ class DjangoGenerator():
 		TEMPLATE_ENVIRONMENT = Environment(
 		    autoescape=False,
 		    loader=FileSystemLoader(os.path.join(PATH, 'data/DjangoGenerator')),
-		    trim_blocks=False)
+		    trim_blocks=True,
+		    lstrip_blocks=True)
 		#
 		def render_models(template_filename, context):
 			return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
@@ -33,6 +34,7 @@ class DjangoGenerator():
 		  #
 		  with open(fname, 'w') as f:
 		    code = render_models('models.template.py', context)
+		    print(code)
 		    f.write(code)
 		#
 		create_models_py(app_name)
