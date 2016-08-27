@@ -10,6 +10,7 @@ import os
 import random
 import string
 from jinja2 import Environment, FileSystemLoader
+from subprocess import Popen, PIPE, STDOUT
 
 class DjangoGenerator():
 	#
@@ -92,6 +93,22 @@ class DjangoGenerator():
 		with open(fname, 'w') as f:
 			f.write(code)
 	#
+	def set_admin_password(self):
+		import os
+		import sys
+		import django
+
+		sys.path.append("./") #path to your settings file  
+		os.environ['DJANGO_SETTINGS_MODULE'] = '%s.settings' % self.prj_name
+		print(os.environ['DJANGO_SETTINGS_MODULE'])
+		print(sys.path)
+		print(os.getcwd())
+		django.setup()
+		from django.contrib.auth.models import User
+		u = User.objects.get(username__exact='admin')
+		u.set_password('1234')
+		u.save()
+	#
 	def go(self):
 		# TODO: hacky code to fix later
 		os.system('django-admin startproject %s' % self.prj_name)
@@ -100,10 +117,14 @@ class DjangoGenerator():
 		self.generate_models()
 		self.generate_admin()
 		self.generate_settings()
+		# TODO: python3
 		os.system('python3 manage.py makemigrations')
 		os.system('python3 manage.py migrate')
-		os.system(' python3 manage.py createsuperuser \
+		os.system('python3 manage.py createsuperuser \
 								--noinput --username admin --email %s' %
 							(self.admin_email))
-		#	python3 manage.py changepassword admin
+		print(self.text['generated_proj'] % self.prj_name)
+		self.set_admin_password()
+		os.chdir(self.prj_name)
+		
 		print(self.text['generated_proj'] % self.prj_name)
