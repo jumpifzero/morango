@@ -1,1 +1,0 @@
-webapp/settings.py - add webapp to the installed apps
