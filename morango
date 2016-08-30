@@ -13,8 +13,8 @@ import pprint
 import sys
 import modelparser as parser
 import exceptions
-import DjangoGenerator
-
+import MorangoDjangoGenerator
+import Models
 
 def setup_cmdline_args():
 	parser = argparse.ArgumentParser(
@@ -34,7 +34,8 @@ def setup_cmdline_args():
 	return args
 
 
-def generate_app(models):
+def generate_app(models_raw):
+	models = [Model().init_from_parser(x) for x in models_raw]
 	generator = DjangoGenerator.DjangoGenerator(models)
 	generator.go()
 
