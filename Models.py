@@ -18,6 +18,7 @@ class Field():
 		self.name = field_data['name']
 		self.relationship = False
 		self.multiplicity = self.init_multiplicity(field_data)
+		return self
 
 class Model():
 	def __init__(self):
@@ -28,4 +29,5 @@ class Model():
 		provided by the modelparser
 		"""
 		self.name = data['model']
-		self.fields = [Field().init_from_parser(x) for x in data.fields]
+		self.fields = [Field().init_from_parser(x) for x in data['fields']]
+		return self

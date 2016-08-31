@@ -17,3 +17,31 @@ models is an object with the following sample structure:
 	   'name': 'author'}
 	 ]
 ```
+
+
+# List of Standard Data types
+ - Boolean
+ - Integer
+ - Decimal
+ - Float
+ - String
+ - Text
+ - File
+ - Image 
+ - Video
+ - Audio
+ - Date
+ - TimeInstant()
+ - Duration
+ - IP
+ - URL
+ - Email
+ - Phone(Country)
+ - Address(Country)
+ - Country
+
+
+# List of UI options for fiels
+ - helpText
+ - editable
+ - label
