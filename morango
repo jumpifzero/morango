@@ -13,7 +13,6 @@ import pprint
 import sys
 import modelparser as parser
 import exceptions
-import MorangoDjangoGenerator
 import Models
 
 def setup_cmdline_args():
@@ -35,8 +34,14 @@ def setup_cmdline_args():
 
 
 def generate_app(models_raw):
-	models = [Model().init_from_parser(x) for x in models_raw]
-	generator = DjangoGenerator.DjangoGenerator(models)
+	models = [Models.Model().init_from_parser(x) for x in models_raw]
+	# Dynamically load the backend generator class
+	# TODO: This string needs to come from outside
+	import importlib
+	module_name = "morangodjangogenerator.DjangoGenerator"
+	class_name = "DjangoGenerator"
+	Generator = getattr(importlib.import_module(module_name), class_name)
+	generator = Generator(models)
 	generator.go()
 
 

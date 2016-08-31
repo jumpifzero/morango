@@ -203,7 +203,6 @@ def validate_models_unique(models):
   """
   index = {}
   for m in models:
-    print(m['model'])
     if m['model'] in index:
       raise exceptions.ModelNotUnique(m['model'])
     else:
