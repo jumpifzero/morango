@@ -1,4 +1,4 @@
-import modelparser
+import morango.modelparser as modelparser
 from collections import namedtuple
 
 FieldMultiplicity = namedtuple('FieldMultiplicity', ['min','max'])

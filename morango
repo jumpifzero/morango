@@ -12,8 +12,8 @@ import argparse
 import pprint
 import sys
 import modelparser as parser
-import exceptions
-import Models
+import .exceptions
+import .Models
 
 def setup_cmdline_args():
 	parser = argparse.ArgumentParser(
@@ -32,7 +32,7 @@ def setup_cmdline_args():
 	args = parser.parse_args()
 	return args
 
-
+	
 def generate_app(models_raw):
 	models = [Models.Model().init_from_parser(x) for x in models_raw]
 	# Dynamically load the backend generator class

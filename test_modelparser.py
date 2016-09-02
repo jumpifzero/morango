@@ -1,8 +1,12 @@
 import unittest
-import modelparser
+import morango.modelparser as modelparser
+import morango.exceptions as exceptions
 
 class TestBlog(unittest.TestCase):
   def test_parse(self):
+    """
+    Tests that the blog.mdl file is parsed correctly
+    """
     MSINGLE = modelparser.MULT_SINGLE
     MANY = modelparser.MULT_ANY
     # TODO: finish this
@@ -24,9 +28,13 @@ class TestBlog(unittest.TestCase):
     # TODO: assert more stuff
 
   def test_repeated_definitions(self):
-    print('repeated')
-    definition = modelparser.parse_files(['test/repeated.mdl'])
-    print(definition)
+    """
+    Tests that a model with repeated model definitions
+    is not ok.
+    """
+    self.assertRaises(exceptions.ModelNotUnique, 
+    	modelparser.parse_files,
+    	['test/repeated.mdl'])
 
 if __name__ == '__main__':
   unittest.main()
