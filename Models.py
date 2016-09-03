@@ -50,6 +50,7 @@ class Field():
 		"Predicate checking if type is one of the standard ones"
 		return field_data['type'] not in standard_field_types
 
+
 class Model():
 	def __init__(self):
 		pass
