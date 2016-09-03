@@ -150,7 +150,7 @@ def p_field_decl(p):
           'null': p[5]
           }
 
-
+# TODO: This definition is not very correct
 def p_datatype(p):
   """
   datatype : STRING

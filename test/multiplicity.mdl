@@ -1,0 +1,12 @@
+ModelToTestMultiplicities{
+	standard: 					String;
+	standardMandatory: 	String!;
+	related: 						Tag;
+	relatedMandatory: 	Tag!;
+	many: 							*Tag;
+	manyMandatory: 			*Tag!;
+}
+
+Tag{
+	name: String!;
+}

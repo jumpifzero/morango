@@ -12,8 +12,8 @@ import argparse
 import pprint
 import sys
 import modelparser as parser
-import .exceptions
-import .Models
+import exceptions
+import Models
 
 def setup_cmdline_args():
 	parser = argparse.ArgumentParser(
