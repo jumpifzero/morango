@@ -17,18 +17,16 @@ import Models
 
 def setup_cmdline_args():
 	parser = argparse.ArgumentParser(
-					description='Generate a web or mobile app')
-	parser.add_argument('generator', type=str, 
-	                   	help='Generator package to use')
-	parser.add_argument('model_files', type=str, 
-											nargs='+',
-	                   	help='list of model files')
-	parser.add_argument('--generator', dest='generator',
-	                   	help='generator to be used')
-	parser.add_argument('--list-generators', dest='accumulate', 
-						action='store_const',
-						const=1, default=0,
-	                   	help='lists installed generators and exits')
+					description='morango web application generator')
+	parser.add_argument('project_conf', type=str, 
+	                   	help='project configuration json file')
+	#parser.add_argument('--list-generators', dest='accumulate', 
+	#					action='store_const',
+	#					const=1, default=0,
+	#                   	help='lists installed generators and exits')
+	parser.add_argument('--offline', action='store_true', 
+		help='Runs in offline mode. Installs all packages from local \
+		folders that need to be specified')
 	args = parser.parse_args()
 	return args
 
@@ -37,6 +35,7 @@ def generate_app(models_raw):
 	models = [Models.Model().init_from_parser(x) for x in models_raw]
 	# Dynamically load the backend generator class
 	# TODO: This string needs to come from outside
+	# TODO: pass offline flag to the generator
 	import importlib
 	module_name = "morangodjangogenerator.DjangoGenerator"
 	class_name = "DjangoGenerator"
@@ -45,9 +44,21 @@ def generate_app(models_raw):
 	generator.go()
 
 
+def parse_project_conf(conf_file_path):
+	"""
+	Reads the json file given as input and 
+	returns it parsed.
+	"""
+	import json
+	with open(conf_file_path, 'r') as f:
+		return json.load(f)
+	return None
+
+
 def main():
 	args = setup_cmdline_args()
-	model_files = args.model_files
+	project_conf = parse_project_conf(args.project_conf)
+	model_files = project_conf['backend']['models']
 	models = parser.parse_files(model_files)
 	generate_app(models)
   	
