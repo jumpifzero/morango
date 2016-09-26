@@ -1,0 +1,16 @@
+{
+	"backend": {
+		"generator": "default",
+		"models": ["blog.mdl"]
+	},
+	"frontend": {
+		"views": {
+			"tag": [
+				{
+					"url": "search",
+					"type": "search"
+				}
+			]
+		}
+	}
+}
